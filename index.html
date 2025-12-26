@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geral's Concert Shelf</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-container">
+        <img src="background.gif" alt="Geral's Concert Shelf" class="animated-background">
+    </div>
+
+    <!-- Shelf Container (starts empty) -->
+    <div class="shelf-container" id="shelfContainer">
+        <!-- Trinkets will be added here dynamically -->
+    </div>
+
+    <!-- Add Trinket Button (Floating) -->
+    <button id="addTrinketButton" class="add-trinket-button" title="Agregar Trinket">
+        ✨ Agregar Trinket
+    </button>
+
+    <!-- Trinket Gallery Panel (Sidebar) -->
+    <div id="trinketGallery" class="trinket-gallery">
+        <div class="gallery-header">
+            <h2>🎵 Selecciona tus Trinkets</h2>
+            <button id="closeGallery" class="close-gallery">&times;</button>
+        </div>
+        
+        <div class="gallery-content">
+            <!-- Twenty One Pilots Section -->
+            <div class="artist-section">
+                <h3 class="artist-name">Twenty One Pilots</h3>
+                <div class="trinket-grid" id="top-trinkets"></div>
+            </div>
+
+            <!-- Jonas Brothers Section -->
+            <div class="artist-section">
+                <h3 class="artist-name">Jonas Brothers</h3>
+                <div class="trinket-grid" id="jb-trinkets"></div>
+            </div>
+
+            <!-- Stray Kids Section -->
+            <div class="artist-section">
+                <h3 class="artist-name">Stray Kids</h3>
+                <div class="trinket-grid" id="sk-trinkets"></div>
+            </div>
+
+            <!-- Other Artists Section -->
+            <div class="artist-section">
+                <h3 class="artist-name">Otros Artistas</h3>
+                <div class="trinket-grid" id="other-trinkets"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Trinket Details -->
+    <div id="trinketModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <img id="modalImage" src="" alt="Trinket">
+            <div class="modal-info">
+                <h2 id="modalTitle"></h2>
+                <p id="modalMessage"></p>
+                <button id="modalLinkButton" class="link-button">
+                    🎵 Abrir enlace
+                </button>
+                <button id="removeTrinketButton" class="remove-button">
+                    🗑️ Quitar del shelf
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button id="resetShelf" class="control-button" title="Vaciar todo el shelf">
+            🔄 Resetear Shelf
+        </button>
+    </div>
+
+    <!-- Welcome Message (shows on first visit) -->
+    <div id="welcomeMessage" class="welcome-message">
+        <div class="welcome-content">
+            <h1>🎵 Bienvenida a tu Concert Shelf</h1>
+            <p>Crea tu propio estante personalizado con tus recuerdos favoritos</p>
+            <button id="startButton" class="start-button">✨ Comenzar</button>
+        </div>
+    </div>
+
+    <script src="trinkets-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
