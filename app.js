@@ -144,9 +144,27 @@ class ConcertShelfInteractive {
         div.appendChild(resizeHandle);
         
         // Click to show details (only if not dragged or resized)
-        div.addEventListener('click', (e) => {
+        const handleClick = (e) => {
             if (!this.isDragging && !this.wasResizing && !e.target.classList.contains('resize-handle')) {
+                e.preventDefault();
+                e.stopPropagation();
                 this.openModal(trinket);
+            }
+        };
+        
+        div.addEventListener('click', handleClick);
+        div.addEventListener('touchend', (e) => {
+            // For touch devices, treat touchend as a potential click
+            if (!this.isDragging && !this.wasResizing && !e.target.classList.contains('resize-handle')) {
+                const touch = e.changedTouches[0];
+                const deltaX = Math.abs(touch.clientX - this.dragStartX);
+                const deltaY = Math.abs(touch.clientY - this.dragStartY);
+                
+                // If didn't move much, treat as a tap/click
+                if (deltaX < 10 && deltaY < 10) {
+                    e.preventDefault();
+                    this.openModal(trinket);
+                }
             }
         });
         
@@ -163,8 +181,31 @@ class ConcertShelfInteractive {
         }, { passive: false });
         
         // Resize events
-        resizeHandle.addEventListener('mousedown', (e) => this.startResize(e, div));
-        resizeHandle.addEventListener('touchstart', (e) => this.startResize(e, div), { passive: false });
+        resizeHandle.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            this.startResize(e, div);
+        });
+        resizeHandle.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+            this.startResize(e, div);
+        }, { passive: false });
+        
+        // For touch devices: tap to show resize handle
+        let touchTimer = null;
+        div.addEventListener('touchstart', (e) => {
+            if (!e.target.classList.contains('resize-handle')) {
+                // Show resize handle on touch
+                div.classList.add('touched');
+                
+                // Hide after 3 seconds if no interaction
+                clearTimeout(touchTimer);
+                touchTimer = setTimeout(() => {
+                    if (!this.isResizing && !this.isDragging) {
+                        div.classList.remove('touched');
+                    }
+                }, 3000);
+            }
+        });
         
         return div;
     }
@@ -260,6 +301,8 @@ class ConcertShelfInteractive {
     }
     
     startDrag(e) {
+        if (e.target.classList.contains('resize-handle')) return;
+        
         e.preventDefault();
         e.stopPropagation();
         
@@ -357,6 +400,11 @@ class ConcertShelfInteractive {
         this.resizeStartScale = currentScale;
         
         element.classList.add('resizing');
+        
+        // Prevent scrolling on touch devices during resize
+        if (e.type === 'touchstart') {
+            document.body.style.overflow = 'hidden';
+        }
     }
     
     resize(e) {
@@ -400,6 +448,10 @@ class ConcertShelfInteractive {
         if (!this.isResizing) return;
         
         this.isResizing = false;
+        
+        // Restore scrolling on touch devices
+        document.body.style.overflow = 'auto';
+        
         if (this.resizeElement) {
             this.resizeElement.classList.remove('resizing');
             this.saveState();
